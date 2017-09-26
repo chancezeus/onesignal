@@ -6,11 +6,11 @@ use Illuminate\Support\Arr;
 
 class OneSignalMessage
 {
-    /** @var string */
-    protected $body;
+    /** @var array */
+    protected $body = [];
 
-    /** @var string */
-    protected $subject;
+    /** @var array */
+    protected $subject = [];
 
     /** @var string */
     protected $url;
@@ -42,22 +42,27 @@ class OneSignalMessage
 
     /**
      * @param string $body
+     * @param string $subject
      */
-    public function __construct($body = '')
+    public function __construct($body = '', $subject = '')
     {
-        $this->body = $body;
+        $this->body($body)->subject($subject);
     }
 
     /**
      * Set the message body.
      *
      * @param string $value
+     * @param string $locale
      *
      * @return $this
      */
-    public function body($value)
+    public function body($value, $locale = 'en')
     {
-        $this->body = $value;
+        $this->body[$locale] = $value;
+        if ($locale != 'en' && empty($this->body['en'])) {
+            $this->body['en'] = $value;
+        }
 
         return $this;
     }
@@ -80,12 +85,16 @@ class OneSignalMessage
      * Set the message subject.
      *
      * @param string $value
+     * @param string $locale
      *
      * @return $this
      */
-    public function subject($value)
+    public function subject($value, $locale = 'en')
     {
-        $this->subject = $value;
+        $this->subject[$locale] = $value;
+        if ($locale != 'en' && empty($this->subject['en'])) {
+            $this->subject['en'] = $value;
+        }
 
         return $this;
     }
@@ -168,8 +177,8 @@ class OneSignalMessage
     public function toArray()
     {
         $message = [
-            'contents' => ['en' => $this->body],
-            'headings' => ['en' => $this->subject],
+            'contents' => $this->body,
+            'headings' => $this->subject,
             'url' => $this->url,
             'buttons' => $this->buttons,
             'web_buttons' => $this->webButtons,
