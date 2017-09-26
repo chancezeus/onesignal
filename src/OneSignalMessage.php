@@ -117,7 +117,7 @@ class OneSignalMessage
      * Set additional data.
      *
      * @param string $key
-     * @param string $value
+     * @param string|array $value
      *
      * @return $this
      */
@@ -132,7 +132,7 @@ class OneSignalMessage
      * Set additional parameters.
      *
      * @param string $key
-     * @param string $value
+     * @param string|array $value
      *
      * @return $this
      */
